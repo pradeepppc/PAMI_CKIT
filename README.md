@@ -4,3 +4,12 @@ This kit contains a set of python libraries for finding user interest-based patt
   1. Native sequential algorithms - traditional pattern mining algorithms whose input exists in the form of transactional databases (or files). 
   2. DataFrame sequential algorithms - Native sequential algorithms are modified to accept dataframes as input. These algorithms can be exported to other softwares like Azure.
   3. Native parallel algorithms - We provide algorithms for finding patterns in Map-Reduce framework.
+  
+  
+  
+  
+Procedure for the creation of files:
+
+Pami_ckit/<nativeSequential/dataFrame/nativeParallel>/PatternModel/Algorithm
+
+E.g. pami_ckit/nativeSequential/FrequentPatternMining/FPgrowth
