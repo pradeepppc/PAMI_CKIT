@@ -10,12 +10,14 @@
 using namespace std;
 
 /*Defining own classes/data structures */
+
+//Node in a Tree
 class TreeNode{
 	public:
 		int item;
 		list<TreeNode*> children;	
 		TreeNode* parent;
-		vector< pair <int, int> > clusterItem;
+		vector< pair <int, int> > clusterItem;  //Stores the periodic summaries
 		int supportItem;
 		TreeNode() {}
 		TreeNode(TreeNode* ptr){
@@ -30,6 +32,7 @@ class TreeNode{
 		}
 };
 
+//pfListEntry of item(ie support,per)
 class PfListEntry : public TreeNode{
 	public:			
 		int freq,per,idl;
@@ -41,7 +44,7 @@ class PfListEntry : public TreeNode{
 		~PfListEntry() {} 
 } ;
 
-
+//Class of Tree
 class Tree{
 	public:
 		TreeNode* root;
@@ -57,7 +60,7 @@ class Tree{
 			OneFreqItemsPair.clear();		
 			OneFreqItemsMap.clear();		
 			itemNodeList.clear();
-			//itemTransList.clear();
+			
 		}
 
 		~Tree() { 
@@ -66,7 +69,7 @@ class Tree{
 			OneFreqItemsPair.clear();		
 			OneFreqItemsMap.clear();		
 			itemNodeList.clear();
-			//itemTransList.clear();
+			
 		}
 };
 
@@ -75,9 +78,9 @@ double minSup=0.0,maxPer=0.0; //express as value between 0 and 1
 ifstream inputFile1,inputFile2;  // pointer to input dataset file
 int numTrans=0;  // numOfTransactions
 int numTrans1 = 0;
-vector<int> OneFreqItems;
+vector<int> OneFreqItems;//frequent items of size 1
 int debug=0,numPatterns=0;
-ofstream outputFile;
+ofstream outputFile; //out file
 vector<int> resultant;
 double countMemory=0,numNodesPfTree=0;
 map<string, int>Hash;
@@ -86,31 +89,27 @@ int randUse,randUse1;
 vector <pair<int, int> > merged;
 
 /* Function Defintions */ 
-int upper_ceil(int numTrans);
-void outputPfList(Tree*);
-void outputFinalPfList(Tree*);
-void populatePfListHashing(Tree*,string);
-void updateMinSupportMaxPeriod();
-void sortPfList(Tree*);
-void pruneAndSortPfList(Tree*);
-int sortFuncDec(pair<int,int>,pair<int,int>);
-void outputOneFreqItems(Tree*);
-Tree* createPfTree(Tree*,string);
-void printTree(TreeNode*);
-void minePfPatterns(Tree*);
-int sortFuncInc(pair<int,int>,pair<int,int>);
-void helperFunc(Tree* , vector<int>);
-int satisfyConditions(int,int);
-void printPfPatterns(vector<int>,int, int);
-Tree* createConditionalTree(Tree*, int);
-void computePfList(Tree*);
-Tree* pruneTailNodes(Tree*,int);
-Tree* insertBranch(Tree*,TreeNode*);
-int isLinear(TreeNode*);
-void genLinear(TreeNode*,vector<int>);
-void calculateMemory(Tree*);
-void recMemory(TreeNode*);
-void process_mem_usage(double &);
+void outputPfList(Tree*);                       //prints all items pfList 
+void outputFinalPfList(Tree*);                  //prints the valid items in pfList
+void populatePfListHashing(Tree*,string);       //helps populate pfList
+void updateMinSupportMaxPeriod();               //converts MinSupport and MaxPer in pers(%) to integer                        
+void pruneAndSortPfList(Tree*);                 //Sorts the pflist based on frequency and prunes the the other items
+int sortFuncDec(pair<int,int>,pair<int,int>);   //Sorts th pfList decending order
+void outputOneFreqItems(Tree*);                 //prints the frequentitems of size 1
+Tree* createPfTree(Tree*,string);               //Creates the Tree
+void printTree(TreeNode*);                      //Prints the Tree
+void minePfPatterns(Tree*);                     //mines the periodic frequent patterns
+int sortFuncInc(pair<int,int>,pair<int,int>);   //Sorts the pfList in descending order
+void helperFunc(Tree* , vector<int>);           // Calling helpFunc for further extensions of an itemset
+int satisfyConditions(int,int);                 //checks whether the minSup and maxPer are maintained
+void printPfPatterns(vector<int>,int, int);     //Prints the Periodic Frequent patterns
+Tree* createConditionalTree(Tree*, int);        //Creates the conditional Tree
+void computePfList(Tree*);                      //computes PfList for conditional Tree
+Tree* pruneTailNodes(Tree*,int);                //Prunes Tailnode and pushes summaries of that node to above nodes
+Tree* insertBranch(Tree*,TreeNode*);            //inserts a branch to the node
+void calculateMemory(Tree*);                    //Calculates the total memory occupied by the tree
+void recMemory(TreeNode*);                      //helps to calculate reccursively the size of tree and no. of nodes in it
+void process_mem_usage(double &);               //gives the total memory used by the process
 
 
 int main(int argc, char **argv){			
@@ -121,8 +120,6 @@ int main(int argc, char **argv){
 	numTrans1=atoi(argv[4]);
 	char outFile[100];
 	sprintf(outFile,"../Outputs/patterns_PF_new_%s_%f_%f_uday.txt",fileName.c_str(),minSup,maxPer);
-	//printf("%f,%f,",minSup,maxPer);
-	//minSup = 1,maxPer=40; // hardcoding
 	if(debug) cout << fileName << endl ; 
 
 	clock_t initial,middle,final;
@@ -194,15 +191,7 @@ void populatePfListHashing(Tree *tree,string fileName)
 					tree->PfList[Hash[item]].per = numTrans - tree->PfList[Hash[item]].idl ;
 				tree->PfList[Hash[item]].idl=numTrans;
 			}
-			//tree->itemTransList[Hash[item]].push_back(numTrans);
-			/*if(tree->supportNode.find(Hash[item])==tree->supportNode.end())
-			  {
-			  tree->supportNode[Hash[item]]=1;
-			  }
-			  else
-			  {
-			  tree->supportNode[Hash[item]]+=1;
-			  }*/
+			
 		}		
 	}
 
@@ -408,13 +397,7 @@ void helperFunc(Tree *tree, vector<int> itemVec){
 
 	if(debug) printTree(conditionalTree->root);	
 
-	/*	
-		if ( isLinear(conditionalTree->root) )
-		{
-		genLinear(conditionalTree->root,itemVec);
-		return;
-		}*/
-
+	
 
 	vector<int> tempV;
 	if(debug) cout << "Executing the last for loop in helperFunc\n";
