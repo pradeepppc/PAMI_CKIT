@@ -45,12 +45,9 @@ class PfListEntry : public TreeNode{
 		~PfListEntry() {} 
 } ;
 
-<<<<<<< HEAD
-//Class of Tree
-=======
+
 
 /* Structure of PF-tree.  */
->>>>>>> 44256d33f64689f6d07a56027795512cfe8379b7
 class Tree{
 	public:
 		TreeNode* root;
