@@ -9,7 +9,7 @@
 #define PB push_back
 using namespace std;
 
-/*Defining own classes/data structures */
+/*Defining the structure TreeNode to record the temporal occurrence information of an item in a transactional database. */
 class TreeNode{
 	public:
 		int item;
@@ -30,6 +30,7 @@ class TreeNode{
 		}
 };
 
+/* PfListEntry class is used to maintain PF-list. */
 class PfListEntry : public TreeNode{
 	public:			
 		int freq,per,idl;
@@ -42,6 +43,7 @@ class PfListEntry : public TreeNode{
 } ;
 
 
+/* Structure of PF-tree.  */
 class Tree{
 	public:
 		TreeNode* root;
@@ -112,7 +114,9 @@ void calculateMemory(Tree*);
 void recMemory(TreeNode*);
 void process_mem_usage(double &);
 
-
+/* 
+    main function which accepts the following input parameters inputfile, outputfile, minSup and maxPer.
+*/
 int main(int argc, char **argv){			
 	string fileName;
 	fileName = argv[1];
@@ -167,6 +171,11 @@ int main(int argc, char **argv){
 	return 0;
 }
 
+/*
+
+Updating pfList structure
+
+*/
 void populatePfListHashing(Tree *tree,string fileName)
 {
 	ReverseHash.clear(); Hash.clear();
@@ -268,6 +277,11 @@ int sortFuncDec(pair<int,int> a, pair<int,int> b){
 		return a.first < b.first;
 	return a.second > b.second;
 }
+
+
+/*
+Scanning the database second time and constructing PFTree.
+*/
 
 Tree* createPfTree(Tree *tree,string fileName){
 	string line,item;	
