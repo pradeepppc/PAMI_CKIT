@@ -11,7 +11,7 @@ using namespace std;
 
 /*Defining own classes/data structures */
 
-//Node in a Tree
+/*Defining the structure TreeNode to record the temporal occurrence information of an item in a transactional database. */
 class TreeNode{
 	public:
 		int item;
@@ -32,7 +32,8 @@ class TreeNode{
 		}
 };
 
-//pfListEntry of item(ie support,per)
+
+/* PfListEntry class is used to maintain PF-list. */
 class PfListEntry : public TreeNode{
 	public:			
 		int freq,per,idl;
@@ -44,7 +45,12 @@ class PfListEntry : public TreeNode{
 		~PfListEntry() {} 
 } ;
 
+<<<<<<< HEAD
 //Class of Tree
+=======
+
+/* Structure of PF-tree.  */
+>>>>>>> 44256d33f64689f6d07a56027795512cfe8379b7
 class Tree{
 	public:
 		TreeNode* root;
@@ -91,7 +97,7 @@ vector <pair<int, int> > merged;
 /* Function Defintions */ 
 void outputPfList(Tree*);                       //prints all items pfList 
 void outputFinalPfList(Tree*);                  //prints the valid items in pfList
-void populatePfListHashing(Tree*,string);       //helps populate pfList
+void populatePfListHashing(Tree*,string);       //Updates the pfList structure
 void updateMinSupportMaxPeriod();               //converts MinSupport and MaxPer in pers(%) to integer                        
 void pruneAndSortPfList(Tree*);                 //Sorts the pflist based on frequency and prunes the the other items
 int sortFuncDec(pair<int,int>,pair<int,int>);   //Sorts th pfList decending order
@@ -111,7 +117,9 @@ void calculateMemory(Tree*);                    //Calculates the total memory oc
 void recMemory(TreeNode*);                      //helps to calculate reccursively the size of tree and no. of nodes in it
 void process_mem_usage(double &);               //gives the total memory used by the process
 
-
+/* 
+    main function which accepts the following input parameters inputfile, outputfile, minSup and maxPer.
+*/
 int main(int argc, char **argv){			
 	string fileName;
 	fileName = argv[1];
@@ -164,6 +172,11 @@ int main(int argc, char **argv){
 	return 0;
 }
 
+/*
+
+Updating pfList structure
+
+*/
 void populatePfListHashing(Tree *tree,string fileName)
 {
 	ReverseHash.clear(); Hash.clear();
@@ -257,6 +270,11 @@ int sortFuncDec(pair<int,int> a, pair<int,int> b){
 		return a.first < b.first;
 	return a.second > b.second;
 }
+
+
+/*
+Scanning the database second time and constructing PFTree.
+*/
 
 Tree* createPfTree(Tree *tree,string fileName){
 	string line,item;	
@@ -364,7 +382,6 @@ void minePfPatterns(Tree *tree){
 		tempV.PB(*(OneFreqItems.begin()));		
 		helperFunc(tree,tempV);		
 		OneFreqItems.erase(OneFreqItems.begin());
-		//break;
 	}	
 }
 
